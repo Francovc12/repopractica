@@ -16,8 +16,12 @@ app.config['MYSQL_DB'] = 'db_api_proyecto'
 
 app.config['SECRET_KEY'] = 'app_123'#importante para usar jwt
 mysql = MySQL(app)
- 
 
+class DBError(Exception):
+    pass
+#@app.route('/', methods=['GET'])
+#def index():
+#    return print(app.url_map)
 
 @app.route('/login', methods =['POST'])
 def login():
@@ -40,6 +44,9 @@ def login():
     },app.config['SECRET_KEY'])
     return jsonify({"token": token, "id": row[0],"nombre_completo":row[3]}),200    
 
+from routes.productos import *
+from routes.facturas import *
+from routes.detalleFacturas import *
     
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)

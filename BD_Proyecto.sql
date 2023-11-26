@@ -57,6 +57,5 @@ CREATE TABLE IF NOT EXISTS Detalle_factura(
     precio INT(8),
     subtotal INT(10),
     PRIMARY KEY(id_detalle),
-    FOREIGN KEY(id_factura) REFERENCES facturas(id_factura),
     FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
 );
