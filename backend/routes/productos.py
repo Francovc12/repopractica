@@ -38,3 +38,11 @@ def modificar_producto(id,id_prod):
         return jsonify(modificar_producto), 200
     except Exception as e:
         return jsonify({"message": e.args[0]}),400
+    
+@app.route('/usuario/<int:id>/productos/<int:id_producto>', methods = ['DELETE'])
+def eliminar_usuario(id,id_producto):
+    try:
+        eliminar = Producto.eliminar_producto(id,id_producto)
+        return jsonify(eliminar), 200
+    except Exception as e:
+        return jsonify({"message": e.args[0]}), 400

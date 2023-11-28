@@ -76,3 +76,12 @@ class Producto():
             return Producto.producto_por_id(id_producto)
         raise DBError("error al actualizar producto")
     
+    def eliminar_producto(id_usuario,id_producto):
+        producto = Producto.producto_por_id(id_producto)
+            
+        if Producto.producto_existe(producto["nombre_producto"], id_usuario):
+            cur = mysql.connection.cursor()
+            cur.execute('DELETE FROM producto WHERE id_producto = {0}'.format(id_producto))
+            mysql.connection.commit()
+            return {"message": "Se elimino un producto"}
+        raise DBError("error no existe el producto seleccionado")

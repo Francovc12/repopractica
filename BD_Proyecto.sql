@@ -20,11 +20,19 @@ CREATE TABLE IF NOT EXISTS Cliente(
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     dni INT(8) NOT NULL,
+    email VARCHAR(255) NOT NULL,
     activo BOOLEAN NOT NULL,
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_user)
 );
-
+INSERT INTO Cliente VALUES(
+    1,1,'Dario','Carrizo',25567876, TRUE,'dariorizo@gmail.com'),
+    (2,1,'Dalma','Mamani',36674897, TRUE,'dalmam@gmail.com'),
+    (3,1,'Walter','Bueno',29743333, TRUE,'buenowaly@gmail.com'),
+    (4,2,'Mario','Guanca',23987102, TRUE,'marito99@gmail.com'),
+    (5,2,'Sebastian','Condori',26709332, TRUE,'seba@gmail.com'),
+    (6,2,'Stefania','Ghilardi',35789209, TRUE,'stefy@gmail.com'
+);
 CREATE TABLE IF NOT EXISTS Producto(
     id_producto INT(10) NOT NULL AUTO_INCREMENT,
     id_usuario INT(10) ,
@@ -38,6 +46,11 @@ CREATE TABLE IF NOT EXISTS Producto(
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_user)
 );
+INSERT INTO Producto VALUES(
+    1,1,'Notebook Z10', 'HP' , 230000, 'Computacion', 'Intel I5 12Gen 12Ram 512gb SSD', 10,0),
+    (2,1,'Televisor 32"', 'Samsung', 120000,'Electrodomestico','Smart tv con Netlix y Disney+',20,0),
+    (3,2,'Lavaropas 10kg', 'Drean', 230000,'Electrodomesticos','10 funciones de lavado con secado rapido',12,0),
+    (4,2,'Heladera 210 kg', 'Patrick', 403000,'Electrodomesticos','Heladera con Frezzer capacidad 210 kg ',3,0);
 
 CREATE TABLE IF NOT EXISTS Facturas(
     id_factura INT(10) NOT NULL AUTO_INCREMENT,
