@@ -1,38 +1,40 @@
-CREATE DATABASE IF NOT EXISTS  db_api_proyecto;
+CREATE DATABASE IF NOT EXISTS db_api_proyecto;
 USE db_api_proyecto;
 
 CREATE TABLE IF NOT EXISTS Usuario(
-    id_user INT(10) NOT NULL AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    id_usuario INT(10) NOT NULL AUTO_INCREMENT,
+    nombre_usuario VARCHAR(255) NOT NULL,
+    contrasenia VARCHAR(255) NOT NULL,
     nombre_completo VARCHAR(255) NOT NULL,
     telefono INT(15) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id_user)
+    PRIMARY KEY(id_usuario)
 );
+
 INSERT INTO Usuario VALUES(
     1,'pepe10','123456','Jose Lopez',154211223,'pepe@gmail.com'),
-    (2,'diego30','012345','Diego Leal',155435321,'eldiego@gmail.com'
-);
+    (2,'diego30','012345','Diego Leal',155435321,'eldiego@gmail.com');
+
 CREATE TABLE IF NOT EXISTS Cliente(
     id_cliente INT(10) NOT NULL AUTO_INCREMENT,
     id_usuario INT(10) ,
-    name VARCHAR(255) NOT NULL,
-    surname VARCHAR(255) NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
     dni INT(8) NOT NULL,
     activo BOOLEAN NOT NULL,
     email VARCHAR(255) NOT NULL,
     PRIMARY KEY (id_cliente),
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_user)
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
+
 INSERT INTO Cliente VALUES(
     1,1,'Dario','Carrizo',25567876, TRUE,'dariorizo@gmail.com'),
     (2,1,'Dalma','Mamani',36674897, TRUE,'dalmam@gmail.com'),
     (3,1,'Walter','Bueno',29743333, TRUE,'buenowaly@gmail.com'),
     (4,2,'Mario','Guanca',23987102, TRUE,'marito99@gmail.com'),
     (5,2,'Sebastian','Condori',26709332, TRUE,'seba@gmail.com'),
-    (6,2,'Stefania','Ghilardi',35789209, TRUE,'stefy@gmail.com'
-);
+    (6,2,'Stefania','Ghilardi',35789209, TRUE,'stefy@gmail.com');
+
 CREATE TABLE IF NOT EXISTS Producto(
     id_producto INT(10) NOT NULL AUTO_INCREMENT,
     id_usuario INT(10) ,
@@ -43,8 +45,9 @@ CREATE TABLE IF NOT EXISTS Producto(
     descripcion VARCHAR(255) NOT NULL,
     stock INT(8),
     PRIMARY KEY (id_producto),
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_user)
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
+
 INSERT INTO Producto VALUES(
     1,1,'Notebook Z10', 'HP' , 230000, 'Computacion', 'Intel I5 12Gen 12Ram 512gb SSD', 10),
     (2,1,'Televisor 32"', 'Samsung', 120000,'Electrodomestico','Smart tv con Netlix y Disney+',20),
@@ -79,7 +82,7 @@ CREATE TABLE IF NOT EXISTS Servicio(
     precio INT(8) NOT NULL,
     descripcion VARCHAR(255),
     PRIMARY KEY (id_servicio),
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_user)
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE IF NOT EXISTS Ventas_Servicios(
