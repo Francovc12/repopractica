@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS Productos(
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
-INSERT INTO Producto VALUES(
+INSERT INTO Productos VALUES(
     1,1,'Notebook Z10', 'HP' , 230000, 'Computacion', 'Intel I5 12Gen 12Ram 512gb SSD', 10),
     (2,1,'Televisor 32"', 'Samsung', 120000,'Electrodomestico','Smart tv con Netlix y Disney+',20),
     (3,2,'Lavaropas 10kg', 'Drean', 230000,'Electrodomesticos','10 funciones de lavado con secado rapido',12),
@@ -71,8 +71,8 @@ CREATE TABLE IF NOT EXISTS Ventas_Productos(
     cantidad INT(8),
     precio INT(8),
     subtotal INT(10),
-    PRIMARY KEY(id_detalle),
-    FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
+    PRIMARY KEY(id_ventas_productos),
+    FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
 );
 
 CREATE TABLE IF NOT EXISTS Servicios(
@@ -91,6 +91,6 @@ CREATE TABLE IF NOT EXISTS Ventas_Servicios(
     id_servicio INT(10),
     precio INT(8),
     subtotal INT(10),
-    PRIMARY KEY(id_detalle),
-    FOREIGN KEY(id_servicio) REFERENCES Servicio(id_servicio)
+    PRIMARY KEY(id_ventas_servicios),
+    FOREIGN KEY(id_servicio) REFERENCES Servicios(id_servicio)
 );
