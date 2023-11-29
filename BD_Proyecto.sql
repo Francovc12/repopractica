@@ -35,7 +35,7 @@ INSERT INTO Cliente VALUES(
     (5,2,'Sebastian','Condori',26709332, TRUE,'seba@gmail.com'),
     (6,2,'Stefania','Ghilardi',35789209, TRUE,'stefy@gmail.com');
 
-CREATE TABLE IF NOT EXISTS Producto(
+CREATE TABLE IF NOT EXISTS Productos(
     id_producto INT(10) NOT NULL AUTO_INCREMENT,
     id_usuario INT(10) ,
     nombre_producto VARCHAR(255) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS Ventas_Productos(
     FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
 );
 
-CREATE TABLE IF NOT EXISTS Servicio(
+CREATE TABLE IF NOT EXISTS Servicios(
     id_servicio INT(10) NOT NULL AUTO_INCREMENT,
     id_usuario INT(10) ,
     nombre_servicio VARCHAR(255) NOT NULL,
