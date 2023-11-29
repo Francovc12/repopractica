@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS Cliente(
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     dni INT(8) NOT NULL,
-    email VARCHAR(255) NOT NULL,
     activo BOOLEAN NOT NULL,
+    email VARCHAR(255) NOT NULL,
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_user)
 );
@@ -42,15 +42,14 @@ CREATE TABLE IF NOT EXISTS Producto(
     categoria VARCHAR(255) NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
     stock INT(8),
-    vendidos_producto INT(8) NOT NULL,
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_user)
 );
 INSERT INTO Producto VALUES(
-    1,1,'Notebook Z10', 'HP' , 230000, 'Computacion', 'Intel I5 12Gen 12Ram 512gb SSD', 10,0),
-    (2,1,'Televisor 32"', 'Samsung', 120000,'Electrodomestico','Smart tv con Netlix y Disney+',20,0),
-    (3,2,'Lavaropas 10kg', 'Drean', 230000,'Electrodomesticos','10 funciones de lavado con secado rapido',12,0),
-    (4,2,'Heladera 210 kg', 'Patrick', 403000,'Electrodomesticos','Heladera con Frezzer capacidad 210 kg ',3,0);
+    1,1,'Notebook Z10', 'HP' , 230000, 'Computacion', 'Intel I5 12Gen 12Ram 512gb SSD', 10),
+    (2,1,'Televisor 32"', 'Samsung', 120000,'Electrodomestico','Smart tv con Netlix y Disney+',20),
+    (3,2,'Lavaropas 10kg', 'Drean', 230000,'Electrodomesticos','10 funciones de lavado con secado rapido',12),
+    (4,2,'Heladera 210 kg', 'Patrick', 403000,'Electrodomesticos','Heladera con Frezzer capacidad 210 kg ',3);
 
 CREATE TABLE IF NOT EXISTS Facturas(
     id_factura INT(10) NOT NULL AUTO_INCREMENT,
@@ -62,8 +61,8 @@ CREATE TABLE IF NOT EXISTS Facturas(
     FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
 );
 
-CREATE TABLE IF NOT EXISTS Detalle_factura(
-    id_detalle INT(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS Ventas_Productos(
+    id_ventas_productos INT(10) NOT NULL AUTO_INCREMENT,
     id_factura INT(10),
     id_producto INT(10),
     cantidad INT(8),
@@ -71,4 +70,24 @@ CREATE TABLE IF NOT EXISTS Detalle_factura(
     subtotal INT(10),
     PRIMARY KEY(id_detalle),
     FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
+);
+
+CREATE TABLE IF NOT EXISTS Servicio(
+    id_servicio INT(10) NOT NULL AUTO_INCREMENT,
+    id_usuario INT(10) ,
+    nombre_servicio VARCHAR(255) NOT NULL,
+    precio INT(8) NOT NULL,
+    descripcion VARCHAR(255),
+    PRIMARY KEY (id_servicio),
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_user)
+);
+
+CREATE TABLE IF NOT EXISTS Ventas_Servicios(
+    id_ventas_servicios INT(10) NOT NULL AUTO_INCREMENT,
+    id_factura INT(10),
+    id_servicio INT(10),
+    precio INT(8),
+    subtotal INT(10),
+    PRIMARY KEY(id_detalle),
+    FOREIGN KEY(id_servicio) REFERENCES Servicio(id_servicio)
 );
