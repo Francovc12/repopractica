@@ -29,14 +29,14 @@ class Facturas():
     
     def suma_total(id,descuento):
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM detalle_factura WHERE id_factura = {0}'.format(id))
+        cur.execute('SELECT * FROM ventas_productos WHERE id_factura = {0}'.format(id))
         info_dtfacturas=cur.fetchall()
         subtotal=0
         for row in info_dtfacturas:
             subtotal+= row[-1]
         if (subtotal!=0):
             return subtotal-descuento
-        raise DBError("no se cargo ningun detalle")
+        raise DBError("no se cargo ninguna venta de producto")
             
         
 

@@ -19,9 +19,7 @@ mysql = MySQL(app)
 
 class DBError(Exception):
     pass
-#@app.route('/', methods=['GET'])
-#def index():
-#    return print(app.url_map)
+
 
 @app.route('/login', methods =['POST'])
 def login():
@@ -32,7 +30,7 @@ def login():
         return jsonify({"message": "Complete los campos"}), 401
 
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM usuario WHERE username = %s AND password = %s;',(auth.username,auth.password))
+    cur.execute('SELECT * FROM usuario WHERE nombre_usuario = %s AND contrasenia = %s;',(auth.username,auth.password))
     row = cur.fetchone()
     print(row)
     #si exite o no devuelvo un mensaje
@@ -46,7 +44,7 @@ def login():
 
 from routes.productos import *
 from routes.facturas import *
-from routes.detalleFacturas import *
+from routes.ventas_productos import *
     
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)

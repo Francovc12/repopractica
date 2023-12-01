@@ -3,9 +3,9 @@ from main import app,mysql,DBError
 from models.productos import Producto
 from models.facturas import Facturas
 
-class Detalle():
+class VentasProducto():
     schema:{
-        "id_detalle":int,
+        "id_ventas_productos":int,
         "id_factura":int,
         "id_producto":int,
         "cantidad":int,
@@ -14,7 +14,7 @@ class Detalle():
     }
 
     def __init__(self, row):
-        self._id_detalle = row[0]
+        self._id_ventas_productos= row[0]
         self._id_factura = row[1]
         self._id_producto = row[2]
         self._cantidad = row[3]
@@ -23,7 +23,7 @@ class Detalle():
 
     def to_json(self):
         return {
-            "id_detalle":self._id_detalle,
+            "id_ventas_productos":self._id_ventas_productos,
             "id_factura":self._id_factura,
             "id_producto":self._id_producto,
             "cantidad":self._cantidad,
@@ -52,15 +52,15 @@ class Detalle():
         id = Facturas.crear_id()
         return id
     
-    def crear_detalleFactura(datos):
+    def crear_ventas_producto(datos):
         #realizo un llamdo a funciones para cargar datos anteriores
-        datos["precio"]=Detalle.cargar_detalleProducto(datos["id_producto"])
+        datos["precio"]=VentasProducto.cargar_detalleProducto(datos["id_producto"])
         print(datos["precio"])
-        datos["id_factura"]=Detalle.obtener_id()
+        datos["id_factura"]=VentasProducto.obtener_id()
         datos["subtotal"]=datos["cantidad"]*datos["precio"]
         print(datos["subtotal"])
         cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO detalle_factura (id_factura,id_producto,cantidad,precio,subtotal) VALUES (%s,%s,%s,%s,%s)',
+        cur.execute('INSERT INTO ventas_productos (id_factura,id_producto,cantidad,precio,subtotal) VALUES (%s,%s,%s,%s,%s)',
                     (datos["id_factura"], datos["id_producto"],datos["cantidad"],datos["precio"],datos["subtotal"]))
         mysql.connection.commit()
         if cur.rowcount > 0:
@@ -68,5 +68,5 @@ class Detalle():
             cur.execute('SELECT LAST_INSERT_ID()')
             res = cur.fetchall()
             id = res[0][0]
-            return Detalle((id,datos["id_factura"], datos["id_producto"],datos["cantidad"],datos["precio"],datos["subtotal"])).to_json()
-        raise DBError("Error al crear detalle de la factura")
+            return VentasProducto((id,datos["id_factura"], datos["id_producto"],datos["cantidad"],datos["precio"],datos["subtotal"])).to_json()
+        raise DBError("Error al crear venta de un producto")
