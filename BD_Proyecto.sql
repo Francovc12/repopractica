@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS Usuario(
     id_usuario INT(10) NOT NULL AUTO_INCREMENT,
     nombre_usuario VARCHAR(255) NOT NULL,
     contrasenia VARCHAR(255) NOT NULL,
-    nombre_completo VARCHAR(255) NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
     telefono INT(15) NOT NULL,
     email VARCHAR(255) NOT NULL,
     PRIMARY KEY(id_usuario)
@@ -21,8 +22,8 @@ CREATE TABLE IF NOT EXISTS Cliente(
     nombre VARCHAR(255) NOT NULL,
     apellido VARCHAR(255) NOT NULL,
     dni INT(8) NOT NULL,
-    activo BOOLEAN NOT NULL,
     email VARCHAR(255) NOT NULL,
+    activo BOOLEAN NOT NULL,
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
@@ -56,7 +57,8 @@ INSERT INTO Productos VALUES(
 
 CREATE TABLE IF NOT EXISTS Facturas(
     id_factura INT(10) NOT NULL AUTO_INCREMENT,
-    id_cliente INT(10),
+    id_usuario INT(10) NOT NULL,
+    id_cliente INT(10) NOT NULL,
     hora_fecha DATETIME,
     descuento INT(5),
     TOTAL INT(10),

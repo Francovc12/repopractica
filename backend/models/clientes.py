@@ -8,8 +8,8 @@ class Cliente():
         "nombre": str,
         "apellido": str,
         "dni": int,
-        "activo" : bool,
-        "email": str
+        "email": str,
+        "activo" : bool
     }
 
     def __init__(self, row):
@@ -18,8 +18,8 @@ class Cliente():
         self._nombre = row[2]
         self._apellido = row[3]
         self._dni = row[4]
-        self._activo = row[5]
-        self._email = row[6]
+        self._email = row[5]
+        self._activo = row[6]
 
     def to_json(self):
         return {
@@ -28,8 +28,8 @@ class Cliente():
             "nombre": self._nombre,
             "apellido" : self._apellido,
             "dni" : self._dni,
+            "email": self._email,
             "activo": self._activo,
-            "email": self._email
         }
     
     def clientes_por_id(id_usuario):
@@ -42,8 +42,8 @@ class Cliente():
     
     def modificar_cliente(id_usuario,id_cliente,datos):
         cur=mysql.connection.cursor()
-        cur.execute('UPDATE cliente SET nombre = %s, apellido = %s, dni = %s, activo = %s, email = %s WHERE id_usuario= %s AND id_cliente= %s',
-                    (datos["nombre"],datos["apellido"],datos["dni"],datos["activo"],datos["email"],id_usuario, id_cliente))
+        cur.execute('UPDATE cliente SET nombre = %s, apellido = %s, dni = %s, email = %s, activo = %s WHERE id_usuario= %s AND id_cliente= %s',
+                    (datos["nombre"],datos["apellido"],datos["dni"],datos["email"],datos["activo"],id_usuario, id_cliente))
         mysql.connection.commit()
         if cur.rowcount > 0 :
             return Cliente.clientes_por_id(id_usuario)
