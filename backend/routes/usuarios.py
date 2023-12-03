@@ -3,6 +3,7 @@ from models.clientes import Cliente
 from flask import jsonify, request
 import jwt
 import datetime
+from models.usuarios import *
 
 @app.route('/login', methods =['POST'])
 def login():
@@ -24,3 +25,21 @@ def login():
     "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes = 100)
     },app.config['SECRET_KEY'])
     return jsonify({"token": token, "id": row[0],"nombre_completo":row[3]}),200  
+
+
+@app.route('/usuarios/<int:id_usuario>/historialventas', methods =['GET'])
+def historialVentas(id_usuario):
+    try:
+        historial_ventas = Usuario.historialVentas(id_usuario)
+        return jsonify(historial_ventas), 200
+    except Exception as e:
+        return jsonify({"message": e.args[0]}), 400
+    
+
+@app.route('/usuarios/<int:id_usuario>/rankingventasclientes', methods =['GET'])
+def rankingVentasClientes(id_usuario):
+    try:
+        ranking_clientes = Usuario.rankingVentasClientes(id_usuario)
+        return jsonify(ranking_clientes), 200
+    except Exception as e:
+        return jsonify({"message": e.args[0]}), 400

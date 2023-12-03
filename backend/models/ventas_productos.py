@@ -70,3 +70,10 @@ class VentasProducto():
             id = res[0][0]
             return VentasProducto((id,datos["id_factura"], datos["id_producto"],datos["cantidad"],datos["precio"],datos["subtotal"])).to_json()
         raise DBError("Error al crear venta de un producto")
+    
+    def consulta_cantidad(id_factura):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT sum(cantidad) FROM ventas_productos WHERE id_factura = %s;',(id_factura))
+        cantidad = cur.fetchall()
+
+        return cantidad

@@ -42,13 +42,26 @@ class Usuario():
             return Facturas((id,datos["id_cliente"], datos["hora_fecha"], datos["descuento"], datos["TOTAL"])).to_json()
         raise DBError('No se encontro la factura')
 
-
-    def historialVentas(self):
+    def verFacturasCliente(id_cliente):
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM facturas WHERE id_usuario = %s', (self._id_usuario))
+        cur.execute('SELECT * FROM facturas WHERE id_cliente = %s;', (id_cliente))
         datos = cur.fetchall()
 
-        lista_ventas=[]
+        facturas_cliente = []
+
+        if cur.rowcount > 0:
+            for row in datos:
+                objFactura = Facturas(row)
+                facturas_cliente.append(objFactura.to_json())
+            return facturas_cliente
+        raise DBError('No se encontraron facturas')
+
+    def historialVentas(id_usuario):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM facturas WHERE id_usuario = %s', (id_usuario))
+        datos = cur.fetchall()
+
+        lista_ventas = []
 
         if cur.rowcount > 0:            
             for row in datos:
@@ -56,7 +69,22 @@ class Usuario():
                 lista_ventas.append(objFactura.to_json())
             return lista_ventas
         
-        return jsonify("El usuario no registra ventas")
+        raise DBError("El usuario no registra ventas")
     
 
-    # def rankingVentasClientes(self):
+    def rankingVentasClientes(id_usuario):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT id_cliente, cant_productos FROM facturas GROUP BY id_cliente;')
+        datos = cur.fetchall()
+
+        ranking_clientes = []
+
+        for row in datos:
+            cliente = row[0]
+            cantidad = row[1]
+            ranking = {"cliente": cliente, "cantidad": cantidad}
+            ranking_clientes.append(ranking)
+
+        return jsonify(ranking_clientes)
+
+        

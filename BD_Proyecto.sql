@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS Usuario(
 );
 
 INSERT INTO Usuario VALUES(
-    1,'pepe10','123456','Jose Lopez',154211223,'pepe@gmail.com'),
-    (2,'diego30','012345','Diego Leal',155435321,'eldiego@gmail.com');
+    1,'pepe10','123456','Jose', 'Lopez',154211223,'pepe@gmail.com'),
+    (2,'diego30','012345','Diego', 'Leal',155435321,'eldiego@gmail.com');
 
 CREATE TABLE IF NOT EXISTS Cliente(
     id_cliente INT(10) NOT NULL AUTO_INCREMENT,
@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS Facturas(
     id_usuario INT(10) NOT NULL,
     id_cliente INT(10) NOT NULL,
     hora_fecha DATETIME,
+    cant_productos INT(10) NOT NULL,
     descuento INT(5),
     TOTAL INT(10),
     PRIMARY KEY(id_factura),

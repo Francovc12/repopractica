@@ -32,6 +32,32 @@ class Cliente():
             "activo": self._activo,
         }
     
+    # Esta funcion verifica si un cliente ya existe con su nombre, apellido e id
+    def cliente_existe(nombre, apellido, id_cliente):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM cliente WHERE nombre = %s AND apellido = %s AND id_cliente = %s', (nombre, apellido, id_cliente))
+        cur.fetchall()
+        return cur.rowcount > 0
+
+    # Esta funcion crea un cliente
+    def crear_cliente(datos):
+        if Cliente.check_data_schema(datos):
+            # check if client already exists
+            if Cliente.cliente_existe(datos["nombre"], datos["apellido"], datos["id_cliente"]):
+                raise DBError("Error creando el cliente - el cliente ya existe")
+            cur = mysql.connection.cursor()
+            cur.execute('INSERT INTO cliente (id_usuario, nombre, apellido, dni, email, activo) VALUES (%s, %s, %s, %s, %s, %s)', 
+                        datos["id_usuario"], datos["nombre"], datos["apellido"], datos["dni"], datos["email"], datos["activo"])
+            mysql.connection.commit()
+            if cur.rowcount > 0:
+                # agarra el id de la ultima fila insertada
+                cur.execute('SELECT LAST_INSERT_ID()')
+                res = cur.fetchall()
+                id = res[0][0]
+                return Cliente((id, datos["id_usuario"], datos["nombre"], datos["apellido"], datos["dni"], datos["email"], datos["activo"])).to_json()
+            raise DBError("Error creando el cliente - fila no insertada")
+        raise TypeError("Error creando el cliente - esquema incorrecto")
+
     def clientes_por_id(id_usuario):
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM cliente WHERE id_usuario = %s', (id_usuario))
