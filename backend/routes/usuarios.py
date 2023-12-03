@@ -17,7 +17,7 @@ def login():
     cur.execute('SELECT * FROM usuario WHERE nombre_usuario = %s AND contrasenia = %s;',(auth.username,auth.password))
     row = cur.fetchone()
     print(row)
-    #si exite o no devuelvo un mensaje
+    #si existe o no devuelvo un mensaje
     if not row:
         return jsonify({"message": "Usuario y/o Contraseña invalidos"}), 401    
     token = jwt.encode({
@@ -25,6 +25,24 @@ def login():
     "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes = 100)
     },app.config['SECRET_KEY'])
     return jsonify({"token": token, "id": row[0],"nombre_completo":row[3]}),200  
+
+
+@app.route('/usuarios/<int:id_usuario>/facturas/<int:id_factura>', methods = ['GET'])
+def verFactura(id_factura):
+    try:
+        factura = Usuario.verFactura(id_factura)
+        return jsonify(factura), 200
+    except Exception as e:
+        return jsonify({"message": e.args[0]}), 400
+    
+
+@app.route('/usuarios/<int:id_usuario>/facturas/clientes/<int:id_cliente>', methods = ['GET'])
+def verFacturasCliente(id_cliente):
+    try:
+        lista_facturas = Usuario.verFacturasCliente(id_cliente)
+        return jsonify(lista_facturas), 200
+    except Exception as e:
+        return jsonify({"message": e.args[0]}), 400
 
 
 @app.route('/usuarios/<int:id_usuario>/historialventas', methods =['GET'])
