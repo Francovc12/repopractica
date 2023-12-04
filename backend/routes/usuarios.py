@@ -4,6 +4,10 @@ from flask import jsonify, request
 import jwt
 import datetime
 from models.usuarios import *
+from utils import requiere_token, recurso_usuario
+
+
+# Ruta para logear
 
 @app.route('/login', methods =['POST'])
 def login():
@@ -27,8 +31,12 @@ def login():
     return jsonify({"token": token, "id": row[0],"nombre_completo":row[3]}),200  
 
 
+# Ruta para ver una factura en especifico
+
 @app.route('/usuarios/<int:id_usuario>/facturas/<int:id_factura>', methods = ['GET'])
-def verFactura(id_factura):
+@requiere_token
+@recurso_usuario
+def verFactura(id_usuario, id_factura):
     try:
         factura = Usuario.verFactura(id_factura)
         return jsonify(factura), 200
@@ -36,8 +44,12 @@ def verFactura(id_factura):
         return jsonify({"message": e.args[0]}), 400
     
 
+# Ruta para ver todas las facturas de un cliente
+
 @app.route('/usuarios/<int:id_usuario>/facturas/clientes/<int:id_cliente>', methods = ['GET'])
-def verFacturasCliente(id_cliente):
+@requiere_token
+@recurso_usuario
+def verFacturasCliente(id_usuario, id_cliente):
     try:
         lista_facturas = Usuario.verFacturasCliente(id_cliente)
         return jsonify(lista_facturas), 200
@@ -45,7 +57,11 @@ def verFacturasCliente(id_cliente):
         return jsonify({"message": e.args[0]}), 400
 
 
+# Ruta para ver el historial de ventas de un usuario
+
 @app.route('/usuarios/<int:id_usuario>/historialventas', methods =['GET'])
+@requiere_token
+@recurso_usuario
 def historialVentas(id_usuario):
     try:
         historial_ventas = Usuario.historialVentas(id_usuario)
@@ -54,7 +70,11 @@ def historialVentas(id_usuario):
         return jsonify({"message": e.args[0]}), 400
     
 
+# Ruta para ver el ranking de ventas de sus clientes
+
 @app.route('/usuarios/<int:id_usuario>/rankingventasclientes', methods =['GET'])
+@requiere_token
+@recurso_usuario
 def rankingVentasClientes(id_usuario):
     try:
         ranking_clientes = Usuario.rankingVentasClientes(id_usuario)

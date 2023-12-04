@@ -3,7 +3,6 @@ from flask import jsonify
 
 class Servicios():
     schema={
-        #"id_servicio": int,
         "id_usuario": int,
         "nombre_servicio": str,
         "precio": float,

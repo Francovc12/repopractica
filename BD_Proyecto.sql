@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS Ventas_Servicios(
     id_ventas_servicios INT(10) NOT NULL AUTO_INCREMENT,
     id_factura INT(10),
     id_servicio INT(10),
+    cantidad INT(8),
     precio INT(8),
     subtotal INT(10),
     PRIMARY KEY(id_ventas_servicios),
