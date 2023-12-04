@@ -45,6 +45,7 @@ def login():
 from routes.productos import *
 from routes.facturas import *
 from routes.ventas_productos import *
+from routes.clientes import *
     
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)

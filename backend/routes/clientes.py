@@ -1,11 +1,13 @@
 from main import app,mysql
 from models.clientes import Cliente
 from flask import jsonify, request
-
+from utils import requiere_token, recurso_usuario
 
 # Ruta para obtener todos los clientes de un usuario
 
 @app.route('/usuario/<int:id_usuario>/clientes', methods = ['GET'])
+@requiere_token
+@recurso_usuario
 def clientes_por_id(id_usuario):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM cliente WHERE id_usuario = {0}'.format(id_usuario))

@@ -1,5 +1,4 @@
-import datetime
-from main import app,mysql,DBError
+from main import mysql,DBError
 from flask import jsonify
 from models.productos import Producto
 from models.facturas import Facturas
@@ -50,12 +49,6 @@ class VentasProducto():
         restar_al_stock = info_producto['stock'] - cantidad
         return restar_al_stock
     
-    def consulta_cantidad(id_factura):
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT sum(cantidad) FROM ventas_productos WHERE id_factura = %s;',(id_factura))
-        cantidad = cur.fetchall()
-
-        return cantidad   
         
     def crear_ventas_producto(datos):
         if VentasProducto.verificacion_datos_ingresados(datos):
