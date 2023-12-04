@@ -1,4 +1,4 @@
-from main import app,mysql
+from main import app
 from models.productos import Producto
 from flask import jsonify, request
 from utils import requiere_token,recurso_usuario

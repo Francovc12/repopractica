@@ -1,6 +1,5 @@
 import datetime
-from main import app, mysql, DBError
-from models.ventas_productos import VentasProducto
+from main import mysql, DBError
 
 class Facturas():
     schema:{
@@ -43,6 +42,11 @@ class Facturas():
         raise DBError("no se cargo ninguna venta de producto")
             
         
+    def cantidad_comprada(id_factura):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT sum(cantidad) FROM ventas_productos WHERE id_factura = %s;',(id_factura))
+        cantidad = cur.fetchall()
+        return cantidad  
 
     def crear_id():
         #consulto las cuantas facturas existentes hay 
@@ -60,7 +64,6 @@ class Facturas():
         datos["cant_productos"] = Facturas.cantidad_comprada(id)
         datos["TOTAL"]=Facturas.suma_total(id,datos["descuento"])
         datos["hora_fecha"]=datetime.datetime.utcnow()
-        print (datos)
         cur = mysql.connection.cursor()
         cur.execute('INSERT INTO facturas (id_usuario,id_cliente,hora_fecha,cant_productos,descuento,TOTAL) VALUES (%s,%s,%s,%s,%s,%s)',
                     (datos["id_usuario"],datos["id_cliente"],datos["hora_fecha"],datos["cant_productos"],datos["descuento"],datos["TOTAL"]))
@@ -74,6 +77,13 @@ class Facturas():
         raise DBError("Error al crear la factura")
     
 
-    def cantidad_comprada(id_factura):
-        cant_productos = VentasProducto.consulta_cantidad(id_factura)
-        return cant_productos
+    def ver_facturas(id_usuario):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM facturas WHERE id_usuario= {0}'.format(id_usuario))
+        datos = cur.fecthall()
+        lista_facturas=[]
+        for row in datos:
+            factura=Facturas(row).to_json
+            lista_facturas.append(factura)
+        return lista_facturas
+        
