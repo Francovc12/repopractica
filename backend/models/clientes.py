@@ -8,8 +8,8 @@ class Cliente():
         "nombre": str,
         "apellido": str,
         "dni": int,
-        "activo" : bool,
-        "email": str
+        "email": str,
+        "activo" : bool
     }
 
     def __init__(self, row):
@@ -18,8 +18,8 @@ class Cliente():
         self._nombre = row[2]
         self._apellido = row[3]
         self._dni = row[4]
-        self._activo = row[5]
-        self._email = row[6]
+        self._email = row[5]
+        self._activo = row[6]
 
     def to_json(self):
         return {
@@ -28,10 +28,36 @@ class Cliente():
             "nombre": self._nombre,
             "apellido" : self._apellido,
             "dni" : self._dni,
+            "email": self._email,
             "activo": self._activo,
-            "email": self._email
         }
     
+    # Esta funcion verifica si un cliente ya existe con su nombre, apellido e id
+    def cliente_existe(nombre, apellido, id_cliente):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM cliente WHERE nombre = %s AND apellido = %s AND id_cliente = %s', (nombre, apellido, id_cliente))
+        cur.fetchall()
+        return cur.rowcount > 0
+
+    # Esta funcion crea un cliente
+    def crear_cliente(datos):
+        if Cliente.check_data_schema(datos):
+            # check if client already exists
+            if Cliente.cliente_existe(datos["nombre"], datos["apellido"], datos["id_cliente"]):
+                raise DBError("Error creando el cliente - el cliente ya existe")
+            cur = mysql.connection.cursor()
+            cur.execute('INSERT INTO cliente (id_usuario, nombre, apellido, dni, email, activo) VALUES (%s, %s, %s, %s, %s, %s)', 
+                        datos["id_usuario"], datos["nombre"], datos["apellido"], datos["dni"], datos["email"], datos["activo"])
+            mysql.connection.commit()
+            if cur.rowcount > 0:
+                # agarra el id de la ultima fila insertada
+                cur.execute('SELECT LAST_INSERT_ID()')
+                res = cur.fetchall()
+                id = res[0][0]
+                return Cliente((id, datos["id_usuario"], datos["nombre"], datos["apellido"], datos["dni"], datos["email"], datos["activo"])).to_json()
+            raise DBError("Error creando el cliente - fila no insertada")
+        raise TypeError("Error creando el cliente - esquema incorrecto")
+
     def clientes_por_id(id_usuario):
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM cliente WHERE id_usuario = %s', (id_usuario))
@@ -42,8 +68,8 @@ class Cliente():
     
     def modificar_cliente(id_usuario,id_cliente,datos):
         cur=mysql.connection.cursor()
-        cur.execute('UPDATE cliente SET nombre = %s, apellido = %s, dni = %s, activo = %s, email = %s WHERE id_usuario= %s AND id_cliente= %s',
-                    (datos["nombre"],datos["apellido"],datos["dni"],datos["activo"],datos["email"],id_usuario, id_cliente))
+        cur.execute('UPDATE cliente SET nombre = %s, apellido = %s, dni = %s, email = %s, activo = %s WHERE id_usuario= %s AND id_cliente= %s',
+                    (datos["nombre"],datos["apellido"],datos["dni"],datos["email"],datos["activo"],id_usuario, id_cliente))
         mysql.connection.commit()
         if cur.rowcount > 0 :
             return Cliente.clientes_por_id(id_usuario)
