@@ -33,6 +33,12 @@ class Producto():
             "descripcion": self._descripcion,
             "stock": self._stock
         }
+    """metodo para actualizar el Stock"""
+    def actualizar_stock(id_producto, restar_stock):
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE productos SET stock = %s WHERE id_producto = %s',(restar_stock,id_producto))
+        mysql.connection.commit()
+        return None
     """Metodo para verificar la si un producto existe en la base de datos ingresando el nombre y el id_usuario"""
     def producto_existe(nombre, id_usuario):
         cur = mysql.connection.cursor()

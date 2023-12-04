@@ -5,15 +5,16 @@ CREATE TABLE IF NOT EXISTS Usuario(
     id_usuario INT(10) NOT NULL AUTO_INCREMENT,
     nombre_usuario VARCHAR(255) NOT NULL,
     contrasenia VARCHAR(255) NOT NULL,
-    nombre_completo VARCHAR(255) NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
     telefono INT(15) NOT NULL,
     email VARCHAR(255) NOT NULL,
     PRIMARY KEY(id_usuario)
 );
 
 INSERT INTO Usuario VALUES(
-    1,'pepe10','123456','Jose Lopez',154211223,'pepe@gmail.com'),
-    (2,'diego30','012345','Diego Leal',155435321,'eldiego@gmail.com');
+    1,'pepe10','123456','Jose' ,'Lopez',154211223,'pepe@gmail.com'),
+    (2,'diego30','012345','Diego', 'Leal',155435321,'eldiego@gmail.com');
 
 CREATE TABLE IF NOT EXISTS Cliente(
     id_cliente INT(10) NOT NULL AUTO_INCREMENT,
@@ -57,11 +58,14 @@ INSERT INTO Productos VALUES(
 CREATE TABLE IF NOT EXISTS Facturas(
     id_factura INT(10) NOT NULL AUTO_INCREMENT,
     id_cliente INT(10),
+    id_usuario INT(10),
     hora_fecha DATETIME,
+    cant_productos INT(10),
     descuento INT(5),
     TOTAL INT(10),
     PRIMARY KEY(id_factura),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE IF NOT EXISTS Ventas_Productos(
@@ -74,6 +78,12 @@ CREATE TABLE IF NOT EXISTS Ventas_Productos(
     PRIMARY KEY(id_ventas_productos),
     FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
 );
+INSERT INTO Ventas_Productos(
+    1,1,1,2,230000,460000),
+    (2,1,2,1,120000,120000);
+
+INSERT INTO Facturas(
+    1,1,2023-11-30 03:13:34,3,5000,455000);
 
 CREATE TABLE IF NOT EXISTS Servicios(
     id_servicio INT(10) NOT NULL AUTO_INCREMENT,
@@ -84,11 +94,15 @@ CREATE TABLE IF NOT EXISTS Servicios(
     PRIMARY KEY (id_servicio),
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
+INSERT INTO Servicios(
+    1,2,'Envio gratis', 0 , 'Envio gratis con compras mayores a 5000'),
+    (2,1,'Envio a ciudades cercanas', 2000 , 'Envio a 10 km del local');
 
 CREATE TABLE IF NOT EXISTS Ventas_Servicios(
     id_ventas_servicios INT(10) NOT NULL AUTO_INCREMENT,
     id_factura INT(10),
     id_servicio INT(10),
+    cantidad INT(10)NOT NULL,
     precio INT(8),
     subtotal INT(10),
     PRIMARY KEY(id_ventas_servicios),
