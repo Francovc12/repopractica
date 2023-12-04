@@ -69,7 +69,7 @@ class VentasServicios():
     def ranking_ventas_servicios():
         cur = mysql.connection.cursor()
         cur.execute('SELECT id_servicio, SUM(cantidad) FROM ventas_servicios GROUP BY id_servicio;')
-        datos = cur.fatchall()
+        datos = cur.fetchall()
         lista_servicios=[]
         if cur.rowcount > 0 : 
             for row in datos:
