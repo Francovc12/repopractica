@@ -26,12 +26,12 @@ def obtener_producto_por_id(id_usuario, id_producto):
         return  jsonify({"message": e.args[0]}), 400  
 
 #misma ruta pero implementando el metodo post para agregar un nuevo producto
-@app.route('/usuario/<int:id>/productos', methods = ['POST'])
+@app.route('/usuario/<int:id_usuario>/productos', methods = ['POST'])
 @requiere_token
 @recurso_usuario
-def crear_producto(id):
+def crear_producto(id_usuario):
     datos = request.get_json()
-    datos["id_usuario"] = id
+    datos["id_usuario"] = id_usuario
 
     try:
         nuevo_producto = Producto.crear_producto(datos)
@@ -40,24 +40,37 @@ def crear_producto(id):
         return jsonify({"message": e.args[0]}), 400
     
 #ruta para modificar los productos con el metodo put
-@app.route('/usuario/<int:id>/productos/<int:id_prod>', methods = ['PUT'])
+@app.route('/usuario/<int:id_usuario>/productos/<int:id_prod>', methods = ['PUT'])
 @requiere_token
 @recurso_usuario
-def modificar_producto(id,id_prod):
+def modificar_producto(id_usuario,id_prod):
     datos = request.get_json()
-    datos["id_usuario"] = id
+    datos["id_usuario"] = id_usuario
     try:
         modificar_producto = Producto.actualizar_producto(id_prod,datos)
         return jsonify(modificar_producto), 200
     except Exception as e:
         return jsonify({"message": e.args[0]}),400
+    
 #ruta para eliminar un producto
-@app.route('/usuario/<int:id>/productos/<int:id_producto>', methods = ['DELETE'])
+@app.route('/usuario/<int:id_usuario>/productos/<int:id_producto>', methods = ['DELETE'])
 @requiere_token
 @recurso_usuario
-def eliminar_usuario(id,id_producto):
+def eliminar_usuario(id_usuario,id_producto):
     try:
-        eliminar = Producto.eliminar_producto(id,id_producto)
+        eliminar = Producto.eliminar_producto(id_usuario,id_producto)
         return jsonify(eliminar), 200
+    except Exception as e:
+        return jsonify({"message": e.args[0]}), 400
+    
+
+#ruta para controlar stock de productos
+@app.route('/usuario/<int:id_usuario>/productos/stock', methods=['GET'])
+@requiere_token
+@recurso_usuario
+def control_stock(id_usuario):
+    try:
+        stock = Producto.control_stock(id_usuario)
+        return jsonify(stock), 200
     except Exception as e:
         return jsonify({"message": e.args[0]}), 400

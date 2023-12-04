@@ -33,18 +33,21 @@ class Producto():
             "descripcion": self._descripcion,
             "stock": self._stock
         }
+    
     """metodo para actualizar el Stock"""
     def actualizar_stock(id_producto, restar_stock):
         cur = mysql.connection.cursor()
         cur.execute('UPDATE productos SET stock = %s WHERE id_producto = %s',(restar_stock,id_producto))
         mysql.connection.commit()
         return None
+    
     """Metodo para verificar la si un producto existe en la base de datos ingresando el nombre y el id_usuario"""
     def producto_existe(nombre, id_usuario):
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM productos WHERE nombre_producto = %s AND id_usuario = %s', (nombre, id_usuario))
         cur.fetchall()
         return cur.rowcount > 0
+    
     """Metodo para consultar en la base de datos un producto de acuierdo a su id_producto"""
     def producto_por_id(id_producto):
         cur = mysql.connection.cursor()
@@ -53,6 +56,7 @@ class Producto():
         if cur.rowcount > 0:
             return Producto(data[0]).to_json()
         raise DBError("Error no se pudo obtener producto por id")
+    
     """Metodo para consultar todos los productos de un usuario"""
     def obtener_productos(id_usuario):
         cur = mysql.connection.cursor()
@@ -65,6 +69,7 @@ class Producto():
                 lista_productos.append(objProducto.to_json())
             return lista_productos
         return jsonify("No hay Productos cargados")
+    
     """Metodo para realizar la creacion de un producto nuevo de acuerdo a los datos enviados desde el frontend"""
     def crear_producto(data):
         if Producto.producto_existe(data["nombre_producto"], data["id_usuario"]):
@@ -80,6 +85,7 @@ class Producto():
             id = res[0][0]
             return Producto((id,data["id_usuario"],data["nombre_producto"],data["marca"],data["precio"],data["categoria"],data["descripcion"],data["stock"])).to_json()
         raise DBError("error al crear el producto")
+    
     """Metodo para actualizar los datos de un Producto de acuerdo a su id"""
     def actualizar_producto(id_producto,datos):
         cur=mysql.connection.cursor()
@@ -89,13 +95,34 @@ class Producto():
         if cur.rowcount > 0 :
             return Producto.producto_por_id(id_producto)
         raise DBError("error al actualizar producto")
+    
     """Metodo para eliminar un producto de acuerdo a su id_producto"""
     def eliminar_producto(id_usuario,id_producto):
         producto = Producto.producto_por_id(id_producto)
-        #verifico si elk producto existe antes de eliminarlo
+        #verifico si el producto existe antes de eliminarlo
         if Producto.producto_existe(producto["nombre_producto"], id_usuario):
             cur = mysql.connection.cursor()
             cur.execute('DELETE FROM productos WHERE id_producto = {0}'.format(id_producto))
             mysql.connection.commit()
             return {"message": "Se elimino un producto"}
         raise DBError("Error no existe el producto seleccionado")
+    
+    """ Metodo para controlar el stock de todos los productos"""
+    def control_stock(id_usuario):
+        cur=mysql.connection.cursor()
+        cur.execute('select id_producto, stock from productos WHERE id_usuario = {0} ORDER BY stock DESC;'.format(id_usuario))
+        datos = cur.fetchall()
+
+        stock_productos = []
+
+        if cur.rowcount > 0 :
+            for row in datos:
+                datos = Producto.producto_por_id(row[0])
+                info_productos={
+                    "producto": datos['nombre_producto'],
+                    "stock" : row[1],
+                }
+                stock_productos.append(info_productos)
+            return jsonify(stock_productos)
+        
+        return jsonify({"message": "No hay stock de productos cargados"})
