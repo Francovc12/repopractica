@@ -3,34 +3,50 @@ window.onload = function(){
     //localStorage.removeItem('username');
     localStorage.removeItem('id');
 }
-function login_user(){
+function login_usuario(){
     document.getElementById("mensaje").innerHTML="";
-    const username = document.getElementById('in-username').value;
-    const password = document.getElementById('in-password').value;
-    const requestOptions={
-        method:'POST',
-        headers:{
-            'Content-Type' : 'application/json',
-            'authorization' : 'Basic ' + btoa(username + ':' + password)
-        }
+    const nombre_usuario = document.getElementById('in-nombre_usuario').value;
+    const contraseña = document.getElementById('in-contraseña').value;
+
+    if (nombre_usuario == "" || contraseña == "")
+    {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Ingrese el usuario y la contraseña',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+        })
     }
-    fetch('http://127.0.0.1:5000/login', requestOptions)
-    .then(
-        res=>{return res.json()}
-        )
-    .then(
-        resp=>{
-            console.log(resp)
-            if (resp.token){
-                localStorage.setItem('token', resp.token);
-                //localStorage.setItem('username', resp.username);
-                localStorage.setItem('id', resp.id);
-                document.getElementById("mensaje").innerHTML = 'Bienvenido ' + resp.nombre_completo;
+    else {
+        const requestOptions={
+            method:'POST',
+            headers:{
+                'Content-Type' : 'application/json',
+                'authorization' : 'Basic ' + btoa(nombre_usuario + ':' + contraseña)
             }
-            else{
-                document.getElementById("mensaje").innerHTML= resp.message;
-            }
-        
         }
+        fetch('http://127.0.0.1:5000/login', requestOptions)
+        .then(
+            res=>{return res.json()}
+            )
+        .then(
+            resp=>{
+                console.log(resp)
+                if (resp.token){
+                    localStorage.setItem('token', resp.token);
+                    //localStorage.setItem('username', resp.username);
+                    localStorage.setItem('id', resp.id);
+                    document.getElementById("mensaje").innerHTML = 'Bienvenido ' + resp.nombre + resp.apellido;
+                }
+                else{
+                    document.getElementById("mensaje").innerHTML= resp.message;
+                }
+            
+            }
         )
+    }
+
+}
+
+function registrar_usuario(){
 }
