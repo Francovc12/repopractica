@@ -12,10 +12,10 @@ class Facturas():
 
     def __init__(self, row):
         self._id_factura = row[0]
-        self._id_usuario = row[1]
-        self._id_cliente = row[2]
+        self._id_cliente = row[1]
+        self._id_usuario = row[2]
         self._hora_fecha = row[3]
-        self._cant_productos: row[4]
+        self._cant_productos = row[4]
         self._descuento = row[5]
         self._TOTAL = row[6]
 
@@ -83,7 +83,7 @@ class Facturas():
         datos = cur.fecthall()
         lista_facturas=[]
         for row in datos:
-            factura=Facturas(row).to_json
+            factura=Facturas(row).to_json()
             lista_facturas.append(factura)
         return lista_facturas
         

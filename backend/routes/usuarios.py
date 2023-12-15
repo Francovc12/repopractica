@@ -13,7 +13,7 @@ from utils import requiere_token, recurso_usuario
 def login():
     auth = request.authorization
     print (auth)
-    """control: existen valores para la autenticacion"""
+    #control: existen valores para la autenticacion
     if not auth or not auth.username or not auth.password:
         return jsonify({"message": "Complete los campos"}), 401
 
@@ -30,6 +30,15 @@ def login():
     },app.config['SECRET_KEY'])
     return jsonify({"token": token, "id": row[0],"nombre_completo":row[3]}),200  
 
+# Ruta para ingresar nuevo usuario
+@app.route('/usuarios', methods = ['POST'])
+def crear_usuario():
+    datos = request.get_json()
+    try:
+        nuevo_usuario = Usuario.crear_usuario(datos)
+        return jsonify(nuevo_usuario), 201
+    except Exception as e:
+        return jsonify({"message": e.args[0]}), 400
 
 # Ruta para ver una factura en especifico
 
