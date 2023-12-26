@@ -47,6 +47,8 @@ from routes.facturas import *
 from routes.ventas_productos import *
 from routes.clientes import *
 from routes.usuarios import *
+from routes.servicios import *
+from routes.ventas_servicios import *
     
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)

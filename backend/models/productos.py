@@ -89,8 +89,8 @@ class Producto():
     """Metodo para actualizar los datos de un Producto de acuerdo a su id"""
     def actualizar_producto(id_producto,datos):
         cur=mysql.connection.cursor()
-        cur.execute('UPDATE productos SET nombre_producto = %s, marca = %s, precio = %s, categoria = %s, descripcion = %s, stock = %s, vendidos_producto = %s WHERE id_producto = %s',
-                    (datos["nombre_producto"],datos["marca"],datos["precio"],datos["categoria"],datos["descripcion"],datos["stock"], datos['vendidos_producto'],id_producto))
+        cur.execute('UPDATE productos SET nombre_producto = %s, marca = %s, precio = %s, categoria = %s, descripcion = %s, stock = %s WHERE id_producto = %s',
+                    (datos["nombre_producto"],datos["marca"],datos["precio"],datos["categoria"],datos["descripcion"],datos["stock"],id_producto))
         mysql.connection.commit()
         if cur.rowcount > 0 :
             return Producto.producto_por_id(id_producto)
@@ -123,6 +123,6 @@ class Producto():
                     "stock" : row[1],
                 }
                 stock_productos.append(info_productos)
-            return jsonify(stock_productos)
+            return stock_productos
         
         return jsonify({"message": "No hay stock de productos cargados"})

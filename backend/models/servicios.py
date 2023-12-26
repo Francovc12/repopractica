@@ -38,11 +38,12 @@ class Servicios():
         cur.execute('SELECT * FROM servicios WHERE id_servicio = {0}'.format(id))
         data = cur.fetchone()
         if cur.rowcount > 0:
-            return Servicios(data[0]).to_json()
+            return Servicios(data).to_json()
         raise DBError("Error no se pudo obtener servicio por id - no row found")
     
     # Metodo para crear un servicio
     def crear_servicio(data):
+        print(data)
         if Servicios.servicio_existe(data["nombre_servicio"], data["id_usuario"]):
             raise DBError("Error producto existe")
         cur = mysql.connection.cursor()
@@ -64,7 +65,7 @@ class Servicios():
                     (datos["nombre_servicio"],datos["precio"],datos["descripcion"],id_servicio))
         mysql.connection.commit()
         if cur.rowcount > 0 :
-            return Servicios.servicio_por_id()(id_servicio)
+            return Servicios.servicio_por_id(id_servicio)
         raise DBError("error al actualizar servicio")
     
     # Metodo para eliminar un servicio
