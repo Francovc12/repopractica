@@ -1,0 +1,12 @@
+html{
+ font-family: 'Satisfy';   
+color: goldenrod;
+}
+head{
+    display: block;
+    margin: 0,auto;
+}
+nav{
+    display: block;
+    width: 30%;
+}

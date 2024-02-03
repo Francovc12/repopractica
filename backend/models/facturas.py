@@ -36,17 +36,32 @@ class Facturas():
             if type(datos[key]) != Facturas.schema[key]:
                 return False
         return True
-    #falta sumar los servicios
-    def suma_total(id,descuento):
+    #Metodo para sumar los productos
+    def suma_productos(id):
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM ventas_productos WHERE id_factura = {0}'.format(id))
-        info_dtfacturas=cur.fetchall()
-        subtotal=0
-        for row in info_dtfacturas:
-            subtotal+= row[-1]
+        cur.execute('SELECT subtotal FROM ventas_productos WHERE id_factura = {0}'.format(id))
+        suma_prod = cur.fetchall()
+        suma = 0
+        for row in suma_prod:
+            suma += row
+        return suma 
+    #Metodo para sumar los servicios
+    def suma_servicios(id):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT subtotal FROM ventas_servicios WHERE id_factura = {0}'.format(id))
+        suma_ser = cur.fetchall()
+        suma = 0
+        for row in suma_ser:
+            suma += row
+        return suma 
+    #suma de los productos y sevicios
+    def suma_total(id,descuento):
+        suma_prod=Facturas.suma_productos(id)
+        suma_ser = Facturas.suma_servicios(id)
+        subtotal = suma_prod + suma_ser
         if (subtotal!=0):
             return subtotal-descuento
-        raise DBError("no se cargo ninguna venta de producto")
+        raise DBError("no se cargo ninguna venta de producto o servicio")
             
     #en esta funcion falta agregar para que  sume los servicios adquiridos    
     def cantidad_comprada(id_factura):
@@ -65,7 +80,7 @@ class Facturas():
             return id_factura
         raise DBError('no se obtuvo las id')
 
-
+    #Metodo para crear una factura
     def crear_factura(datos):
         if Facturas.verificacion_datos_ingresados(datos):
             id=Facturas.crear_id()
@@ -86,7 +101,7 @@ class Facturas():
                 return Facturas((id,datos["id_usuario"],datos["id_cliente"], datos["hora_fecha"],datos["cant_productos"], datos["descuento"], datos["TOTAL"])).to_json()
             raise DBError("Error al crear la factura")
         raise TypeError("Error al crear nueva factura - verifique los datos")
-
+    #metodo para ver las facturas
     def ver_facturas(id_usuario):
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM facturas WHERE id_usuario= {0}'.format(id_usuario))

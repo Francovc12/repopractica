@@ -1,10 +1,12 @@
 from main import app,mysql
 from models.clientes import Cliente
 from flask import jsonify, request
-
+from utils import requiere_token, recurso_usuario
 # Ruta para crear un cliente
 #falta controlar que el usuario no pueda crear clientes a otro usuario 
 @app.route('/usuarios/<int:id_usuario>/clientes', methods = ['POST'])
+@recurso_usuario
+@requiere_token
 def crear_cliente(id_usuario):
     datos = request.get_json()
     datos["id_usuario"] = id_usuario
@@ -20,6 +22,8 @@ def crear_cliente(id_usuario):
 # Ruta para obtener todos los clientes de un usuario
 
 @app.route('/usuarios/<int:id_usuario>/clientes', methods = ['GET'])
+@recurso_usuario
+@requiere_token
 def clientes_por_id(id_usuario):
     try:
         lista_clientes=Cliente.clientes_por_usuario(id_usuario)
@@ -31,6 +35,8 @@ def clientes_por_id(id_usuario):
 # Ruta para modificar un cliente
 
 @app.route('/usuarios/<int:id_usuario>/clientes/<int:id_cliente>', methods = ['PUT'])
+@recurso_usuario
+@requiere_token
 def modificar_cliente(id_usuario,id_cliente):
     datos = request.get_json()
     datos["id_usuario"] = id_usuario
@@ -45,6 +51,8 @@ def modificar_cliente(id_usuario,id_cliente):
 # Ruta para eliminar un cliente
 
 @app.route('/usuarios/<int:id_usuario>/clientes/<int:id_cliente>', methods = ['DELETE'])
+@recurso_usuario
+@requiere_token
 def eliminar_cliente(id_usuario,id_cliente):
     try:
         estado = Cliente.eliminar_cliente(id_usuario,id_cliente)

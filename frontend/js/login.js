@@ -4,7 +4,7 @@ window.onload = function(){
     localStorage.removeItem('id');
 }
 function login_user(){
-    document.getElementById("mensaje").innerHTML="";
+    //document.getElementById("mensaje").innerHTML="";
     const username = document.getElementById('in-username').value;
     const password = document.getElementById('in-password').value;
     const requestOptions={
@@ -23,9 +23,10 @@ function login_user(){
             console.log(resp)
             if (resp.token){
                 localStorage.setItem('token', resp.token);
-                //localStorage.setItem('username', resp.username);
+                localStorage.setItem('username', resp.nombre_completo);
                 localStorage.setItem('id', resp.id);
-                document.getElementById("mensaje").innerHTML = 'Bienvenido ' + resp.nombre_completo;
+                //document.getElementById("mensaje").innerHTML = 'Bienvenido ' + resp.nombre_completo;
+                window.location.href = "./dashboard.html";
             }
             else{
                 document.getElementById("mensaje").innerHTML= resp.message;
