@@ -11,30 +11,37 @@
     
 </head>
 <body>
-    <head>
+
+    <header>
         <h1>Dashboard</h1>
-    </head>
-    <nav>
-        <h3>Servicios</h3>
-        <ul>
-            <a href="#main" onclick="clientes()"><li>Clientes</li></a>
-            <li>Facturas</li>
-            <li>Productos</li>
-            <li>Servicios</li>
-            <li>Contacto</li>
-        </ul>
-        <h3>Operaciones</h3>
-        <ul>
-            <li>Historial de ventas</li>
-            <li>Control de Stock</li>
-            <li>Rancking ventas Productos</li>
-            <li>Rancking ventas Servicios</li>
-            <li>Rancking ventas Clientes</li>
-        </ul>
-    </nav>
+    </header>
+    <aside>
+        <nav>
+            <h3>Servicios</h3>
+            <ul>
+                <a href="#recurso" onclick="clientes()"><li>Clientes</li></a>
+                <li>Facturas</li>
+                <li>Productos</li>
+                <li>Servicios</li>
+                <li>Contacto</li>
+            </ul>
+            <h3>Operaciones</h3>
+            <ul>
+                <li>Historial de ventas</li>
+                <li>Control de Stock</li>
+                <li>Rancking ventas Productos</li>
+                <li>Rancking ventas Servicios</li>
+                <li>Rancking ventas Clientes</li>
+                <a href="index.html"><li>Cerrar sesion</li></a>
+            </ul>
+        </nav>
+    </aside>
+
     <main>
         <h2 id="bienvenida"></h2>
         <div class ="Carrusel"></div>
+        <div id="botonesrec"></div>
+        <dialog id="form"></dialog>
         <div id="recurso"></div>
     </main>
     <footer>
