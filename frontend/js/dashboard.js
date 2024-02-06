@@ -5,6 +5,7 @@ window.onload = function(){
     document.getElementById("bienvenida").innerHTML = 'Bienvenido ' + name;
 }
 function clientes(){
+
     const requestOptions={
         method:'GET',
         headers:{
@@ -26,6 +27,7 @@ function clientes(){
             if (resp.length == 0){
                 clientes = clientes.concat('<tr><td>No posee registros de clientes</td></tr>')
             }
+
             for(let i = 0; i < resp.length; i++){
                 let id = resp[i].id_cliente
                 let name = resp[i].nombre
@@ -34,13 +36,14 @@ function clientes(){
                 let email = resp[i].email
                 //console.log(email)
                 let cliente=`<tr><td>${id}</td><td>${name}</td><td>${surname}</td><td>${dni}</td><td>${email}</td><td><button>Eliminar</button><button>Modificar</button></td></tr>`
+
+
                 clientes = clientes.concat(cliente)
             }
             document.getElementById("tablacliente").innerHTML=clientes
         }
     )
     .catch(error => console.error(error));
-    
 }
 function agregarcliente(){
     document.getElementById("form").innerHTML='<form><input type="text" placeholder="Ingrese nombre"></input><button type="submit">Enviar</button></form><button id="cerrarModal">Cerrar</button>'

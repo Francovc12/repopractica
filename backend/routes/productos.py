@@ -56,7 +56,7 @@ def modificar_producto(id_usuario,id_prod):
 @app.route('/usuario/<int:id_usuario>/productos/<int:id_producto>', methods = ['DELETE'])
 @requiere_token
 @recurso_usuario
-def eliminar_usuario(id_usuario,id_producto):
+def eliminar_producto(id_usuario,id_producto):
     try:
         eliminar = Producto.eliminar_producto(id_usuario,id_producto)
         return jsonify(eliminar), 200

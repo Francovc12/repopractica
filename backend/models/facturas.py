@@ -2,20 +2,17 @@ import datetime
 from main import mysql, DBError
 
 class Facturas():
-    schema:{
-        "id_factura": int,
-        "id_usuario": int,
+    schema={
         "id_cliente": int,
-        "hora_fecha": datetime,
         "descuento" : int,
     }
 
     def __init__(self, row):
         self._id_factura = row[0]
-        self._id_usuario = row[1]
-        self._id_cliente = row[2]
+        self._id_cliente = row[1]
+        self._id_usuario = row[2]
         self._hora_fecha = row[3]
-        self._cant_productos: row[4]
+        self._cant_productos = row[4]
         self._descuento = row[5]
         self._TOTAL = row[6]
 
@@ -29,22 +26,47 @@ class Facturas():
             "descuento" : self._descuento,
             "TOTAL" : self._TOTAL
         }
-    
-    def suma_total(id,descuento):
+    # Metodo para verificar los datos ingresados
+    def verificacion_datos_ingresados(datos):
+        if datos == None or type(datos) != dict:
+            return False
+        for key in Facturas.schema:
+            if key not in datos:
+                return False
+            if type(datos[key]) != Facturas.schema[key]:
+                return False
+        return True
+    #Metodo para sumar los productos
+    def suma_productos(id):
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM ventas_productos WHERE id_factura = {0}'.format(id))
-        info_dtfacturas=cur.fetchall()
-        subtotal=0
-        for row in info_dtfacturas:
-            subtotal+= row[-1]
+        cur.execute('SELECT subtotal FROM ventas_productos WHERE id_factura = {0}'.format(id))
+        suma_prod = cur.fetchall()
+        suma = 0
+        for row in suma_prod:
+            suma += row
+        return suma 
+    #Metodo para sumar los servicios
+    def suma_servicios(id):
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT subtotal FROM ventas_servicios WHERE id_factura = {0}'.format(id))
+        suma_ser = cur.fetchall()
+        suma = 0
+        for row in suma_ser:
+            suma += row
+        return suma 
+    #suma de los productos y sevicios
+    def suma_total(id,descuento):
+        suma_prod=Facturas.suma_productos(id)
+        suma_ser = Facturas.suma_servicios(id)
+        subtotal = suma_prod + suma_ser
         if (subtotal!=0):
             return subtotal-descuento
-        raise DBError("no se cargo ninguna venta de producto")
+        raise DBError("no se cargo ninguna venta de producto o servicio")
             
-        
+    #en esta funcion falta agregar para que  sume los servicios adquiridos    
     def cantidad_comprada(id_factura):
         cur = mysql.connection.cursor()
-        cur.execute('SELECT sum(cantidad) FROM ventas_productos WHERE id_factura = %s;',(id_factura))
+        cur.execute('SELECT sum(cantidad) FROM ventas_productos WHERE id_factura = {0};'.format(id_factura))
         cantidad = cur.fetchall()
         return cantidad  
 
@@ -58,32 +80,35 @@ class Facturas():
             return id_factura
         raise DBError('no se obtuvo las id')
 
-
+    #Metodo para crear una factura
     def crear_factura(datos):
-        id=Facturas.crear_id()
-        datos["cant_productos"] = Facturas.cantidad_comprada(id)
-        datos["TOTAL"]=Facturas.suma_total(id,datos["descuento"])
-        datos["hora_fecha"]=datetime.datetime.utcnow()
-        cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO facturas (id_usuario,id_cliente,hora_fecha,cant_productos,descuento,TOTAL) VALUES (%s,%s,%s,%s,%s,%s)',
-                    (datos["id_usuario"],datos["id_cliente"],datos["hora_fecha"],datos["cant_productos"],datos["descuento"],datos["TOTAL"]))
-        mysql.connection.commit()
-        if cur.rowcount > 0:
-            #obtengo la ultima factura
-            cur.execute('SELECT LAST_INSERT_ID()')
-            res = cur.fetchall()
-            id = res[0][0]
-            return Facturas((id,datos["id_usuario"],datos["id_cliente"], datos["hora_fecha"],datos["cant_productos"], datos["descuento"], datos["TOTAL"])).to_json()
-        raise DBError("Error al crear la factura")
-    
-
+        if Facturas.verificacion_datos_ingresados(datos):
+            id=Facturas.crear_id()
+            datos["cant_productos"] = Facturas.cantidad_comprada(id)
+            print("paso1")
+            datos["TOTAL"]=Facturas.suma_total(id,datos["descuento"])
+            print("paso1")
+            datos["hora_fecha"]=datetime.datetime.utcnow()
+            cur = mysql.connection.cursor()
+            cur.execute('INSERT INTO facturas (id_usuario,id_cliente,hora_fecha,cant_productos,descuento,TOTAL) VALUES (%s,%s,%s,%s,%s,%s)',
+                        (datos["id_usuario"],datos["id_cliente"],datos["hora_fecha"],datos["cant_productos"],datos["descuento"],datos["TOTAL"]))
+            mysql.connection.commit()
+            if cur.rowcount > 0:
+                #obtengo la ultima factura
+                cur.execute('SELECT LAST_INSERT_ID()')
+                res = cur.fetchall()
+                id = res[0][0]
+                return Facturas((id,datos["id_usuario"],datos["id_cliente"], datos["hora_fecha"],datos["cant_productos"], datos["descuento"], datos["TOTAL"])).to_json()
+            raise DBError("Error al crear la factura")
+        raise TypeError("Error al crear nueva factura - verifique los datos")
+    #metodo para ver las facturas
     def ver_facturas(id_usuario):
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM facturas WHERE id_usuario= {0}'.format(id_usuario))
-        datos = cur.fecthall()
+        datos = cur.fetchall()
         lista_facturas=[]
         for row in datos:
-            factura=Facturas(row).to_json
+            factura=Facturas(row).to_json()
             lista_facturas.append(factura)
         return lista_facturas
         

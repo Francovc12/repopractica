@@ -3,6 +3,7 @@ window.onload = function(){
     localStorage.removeItem('username');
     localStorage.removeItem('id');
 }
+
 function login_usuario(){
     const nombre_usuario = document.getElementById('in-nombre_usuario').value;
     const contraseña = document.getElementById('in-contraseña').value;
