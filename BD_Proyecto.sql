@@ -78,12 +78,12 @@ CREATE TABLE IF NOT EXISTS Ventas_Productos(
     PRIMARY KEY(id_ventas_productos),
     FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
 );
-INSERT INTO Ventas_Productos(
+INSERT INTO Ventas_Productos VALUES(
     1,1,1,2,230000,460000),
     (2,1,2,1,120000,120000);
 
-INSERT INTO Facturas(
-    1,1,2023-11-30 03:13:34,3,5000,455000);
+INSERT INTO Facturas VALUES(
+    1,1,1,'2023-11-30 03:13:34',3,5000,455000);
 
 CREATE TABLE IF NOT EXISTS Servicios(
     id_servicio INT(10) NOT NULL AUTO_INCREMENT,
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS Servicios(
     PRIMARY KEY (id_servicio),
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
-INSERT INTO Servicios(
+INSERT INTO Servicios VALUES(
     1,2,'Envio gratis', 0 , 'Envio gratis con compras mayores a 5000'),
     (2,1,'Envio a ciudades cercanas', 2000 , 'Envio a 10 km del local');
 

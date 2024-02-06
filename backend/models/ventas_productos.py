@@ -4,7 +4,7 @@ from models.productos import Producto
 from models.facturas import Facturas
 
 class VentasProducto():
-    schema:{
+    schema={
         "id_producto":int,
         "cantidad":int,
     }
